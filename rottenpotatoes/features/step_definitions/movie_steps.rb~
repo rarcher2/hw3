@@ -35,15 +35,8 @@ When /I (un)?check the following ratings: (.*)/ do |uncheck, rating_list|
   end
 end
 
-Then /I should (not )?see all the movies ratings: (.*)/ do |filter_out, rating_list|
+Then /I should see all the movies/ do
   # Make sure that all the movies in the app are visible in the table
-  ratings = rating_list.split(', ')
-  movies = []
-  ratings.each{|rating| movies = movies + Movie.select{|movie| movie.rating == rating}}
-
-  if filter_out
-    movies.each{|movie| assert(!page.body.include?(movie.title))}
-  else
-    movies.each{|movie| assert(page.body.include?(movie.title))}
-  end
+  rows = page.all('#movies tr').size - 1
+  assert rows == Movie.count()
 end
